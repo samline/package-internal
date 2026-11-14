@@ -15,7 +15,7 @@ This is a building block for maintainers of @samline packages, not an end-user A
 ## Installation
 
 ```sh
-bun add -d @samline/internal
+pnpm add -D @samline/internal
 ```
 
 In `tsup.config.ts`, bundle it and inline its types:
