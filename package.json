@@ -2,6 +2,14 @@
   "name": "@samline/internal",
   "version": "1.0.0",
   "description": "Shared DOM helpers (auto-init, data-* readers, element targets, reduced motion) bundled into @samline packages at build time. Not a standalone public API.",
+  "keywords": [
+    "samline",
+    "dom",
+    "data-attributes",
+    "auto-init",
+    "prefers-reduced-motion",
+    "utilities"
+  ],
   "author": "Samuel Olvera (samline)",
   "license": "MIT",
   "homepage": "https://github.com/samline/internal#readme",
@@ -52,7 +60,6 @@
     "release": "bun run check && npm publish"
   },
   "devDependencies": {
-    "@playwright/test": "^1.65.0",
     "@types/node": "^24.13.5",
     "@vitest/coverage-v8": "^5.0.1",
     "esbuild": "^0.28.2",

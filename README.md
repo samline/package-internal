@@ -8,6 +8,7 @@ This is a building block for maintainers of @samline packages, not an end-user A
 
 - [Installation](#installation)
 - [API at a glance](#api-at-a-glance)
+- [Example](#example)
 - [Changelog](#changelog)
 - [License](#license)
 
@@ -31,13 +32,29 @@ export default defineConfig({
 
 ## API at a glance
 
-| Export                                                                  | Purpose                                                                                   |
-| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `isBrowser`, `noop`                                                     | Guard DOM work so calls are no-ops without a DOM.                                         |
-| `resolveElements(target, root?)`                                        | Element, selector, `NodeList` or array to an element array. `ElementTarget` is its type.  |
-| `readBoolean`, `readEnum`, `readNumber`, `readNumberPair`, `readString` | Typed `data-*` readers; attributes win over options.                                      |
-| `REDUCED_MOTION_QUERY`, `prefersReducedMotion`, `onReducedMotionChange` | `prefers-reduced-motion` state and changes.                                               |
-| `autoInit(options)`                                                     | Start every matching element, including ones added later; returns `{ refresh, destroy }`. |
+| Export                                                                  | Purpose                                                                                                                                                                  |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `isBrowser`, `noop`                                                     | Guard DOM work so calls are no-ops without a DOM.                                                                                                                        |
+| `resolveElements(target, root?)`                                        | Element, selector, `NodeList` or array to an element array. `ElementTarget` is its type.                                                                                 |
+| `readBoolean`, `readEnum`, `readNumber`, `readNumberPair`, `readString` | Typed `data-*` readers: `(element, attributeName, fallback)`; an absent or invalid value returns the fallback.                                                           |
+| `REDUCED_MOTION_QUERY`, `prefersReducedMotion`, `onReducedMotionChange` | `prefers-reduced-motion` state and changes.                                                                                                                              |
+| `autoInit({ selector, init, root?, observe? })`                         | Run `init` once per matching element, including ones added later, and its returned cleanup when the element leaves; returns `{ refresh, destroy }`. Inert without a DOM. |
+
+## Example
+
+```ts
+import { autoInit, prefersReducedMotion, readNumber } from '@samline/internal'
+
+export const autoFade = () =>
+  autoInit({
+    selector: '[data-fade]',
+    init: element => {
+      const duration = prefersReducedMotion() ? 0 : readNumber(element, 'data-fade-duration', 300)
+      const animation = element.animate([{ opacity: 0 }, { opacity: 1 }], duration)
+      return () => animation.cancel()
+    },
+  })
+```
 
 ## Changelog
 
