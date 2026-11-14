@@ -1,17 +1,68 @@
 {
   "name": "@samline/internal",
-  "version": "0.0.0",
-  "private": true,
-  "description": "Shared, unpublished helpers bundled into each @samline utility at build time.",
+  "version": "1.0.0",
+  "description": "Shared DOM helpers (auto-init, data-* readers, element targets, reduced motion) bundled into @samline packages at build time. Not a standalone public API.",
+  "author": "Samuel Olvera (samline)",
+  "license": "MIT",
+  "homepage": "https://github.com/samline/internal#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samline/internal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/samline/internal/issues"
+  },
   "type": "module",
   "sideEffects": false,
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "LICENSE.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "bun@1.4.4",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "echo 'internal is bundled into consumers; nothing to build'",
+    "clean": "rm -rf dist coverage",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "size": "node scripts/check-size.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "bun run format:check && bun run typecheck && bun run test:coverage && bun run build && bun run size",
+    "prepublishOnly": "bun run clean && bun run build && bun run typecheck && bun run test:coverage",
+    "release": "bun run check && npm publish"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0",
+    "@types/node": "^24.13.5",
+    "@vitest/coverage-v8": "^5.0.1",
+    "esbuild": "^0.28.2",
+    "jsdom": "^26.1.0",
+    "prettier": "^3.9.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.1"
+  },
+  "size": {
+    "./dist/index.js": 1200
   }
 }
